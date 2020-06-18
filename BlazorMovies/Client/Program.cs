@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BlazorMovies.Client.Helpers;
 using Blazor.FileReader;
+using BlazorMovies.Client.Repository;
 
 namespace BlazorMovies.Client
 {
@@ -21,6 +22,9 @@ namespace BlazorMovies.Client
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<IRepository, RepositoryInMemory>();
+            builder.Services.AddScoped<IHttpService, HttpService>();
+            builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+            builder.Services.AddScoped<IPersonRepository, PersonRepository>();
             builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
             await builder.Build().RunAsync();
         }
