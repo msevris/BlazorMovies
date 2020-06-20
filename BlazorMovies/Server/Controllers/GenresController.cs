@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorMovies.Server.Controllers
 {
@@ -17,6 +17,22 @@ namespace BlazorMovies.Server.Controllers
         public GenresController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        // GET api/<GenresController>
+        [HttpGet]
+        public async Task<ActionResult<List<Genre>>> Get()
+        {
+            return await _context.Genres.ToListAsync();
+        }
+
+        // GET api/<GenresController>{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Genre>> Get(int id)
+        {
+            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.Id == id);
+            if (genre == null) { return NotFound(); }
+            return genre;
         }
 
         // POST api/<GenresController>

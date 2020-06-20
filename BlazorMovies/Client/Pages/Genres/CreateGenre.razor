@@ -6,24 +6,24 @@
 
     <GenreForm Genre="genre" OnValidSubmit="Create" />
 
+@code {
+    private Genre genre = new Genre();
 
-    @code {
-        private Genre genre = new Genre();
+    private async Task Create()
+    {
+        Console.WriteLine("Create Method");
+        Console.WriteLine(genre.Name);
 
-        private async Task Create()
+        try
         {
-            Console.WriteLine("Create Method");
-            Console.WriteLine(genre.Name);
-
-            try
-            {
-                await _repository.CreateGenre(genre);
-                _navigationManager.NavigateTo("genres");
-            }
-            catch (Exception _ex)
-            {
-                // handle the exception ...
-                Console.WriteLine(_ex.Message);
-            }
+            await _repository.CreateGenre(genre);
+            _navigationManager.NavigateTo("genres");
+        }
+        catch (Exception _ex)
+        {
+            // handle the exception ...
+            Console.WriteLine(_ex.Message);
         }
     }
+}
+  

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorMovies.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200618131804_Initial")]
+    [Migration("20200620134130_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,13 +95,10 @@ namespace BlazorMovies.Server.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GenresId")
+                    b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GenreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "GenresId");
+                    b.HasKey("MovieId", "GenreId");
 
                     b.HasIndex("GenreId");
 
@@ -123,6 +120,7 @@ namespace BlazorMovies.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Picture")
@@ -136,13 +134,13 @@ namespace BlazorMovies.Server.Migrations
             modelBuilder.Entity("BlazorMovies.Shared.Entities.MoviesActors", b =>
                 {
                     b.HasOne("BlazorMovies.Shared.Entities.Movie", "Movie")
-                        .WithMany()
+                        .WithMany("MoviesActors")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BlazorMovies.Shared.Entities.Person", "Person")
-                        .WithMany()
+                        .WithMany("MoviesActors")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -152,7 +150,9 @@ namespace BlazorMovies.Server.Migrations
                 {
                     b.HasOne("BlazorMovies.Shared.Entities.Genre", "Genre")
                         .WithMany("MoviesGenres")
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BlazorMovies.Shared.Entities.Movie", "Movie")
                         .WithMany("MoviesGenres")

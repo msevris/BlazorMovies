@@ -44,7 +44,7 @@ namespace BlazorMovies.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Biography = table.Column<string>(nullable: true),
                     Picture = table.Column<string>(nullable: true),
                     DateOfBirth = table.Column<DateTime>(nullable: false)
@@ -59,18 +59,17 @@ namespace BlazorMovies.Server.Migrations
                 columns: table => new
                 {
                     MovieId = table.Column<int>(nullable: false),
-                    GenresId = table.Column<int>(nullable: false),
-                    GenreId = table.Column<int>(nullable: true)
+                    GenreId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MoviesGenres", x => new { x.MovieId, x.GenresId });
+                    table.PrimaryKey("PK_MoviesGenres", x => new { x.MovieId, x.GenreId });
                     table.ForeignKey(
                         name: "FK_MoviesGenres_Genres_GenreId",
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MoviesGenres_Movies_MovieId",
                         column: x => x.MovieId,

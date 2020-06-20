@@ -14,7 +14,7 @@
         try
         {
             await _personRepository.CreatePerson(person);
-            _navigationManager.NavigateTo("person");
+            _navigationManager.NavigateTo("people");
 
         }
         catch (Exception _ex)
