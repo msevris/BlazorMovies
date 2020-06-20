@@ -44,5 +44,14 @@ namespace BlazorMovies.Server.Controllers
             return genre.Id;
         }
 
+        // PUT api/<>GenresController
+        [HttpPut]
+        public async Task<ActionResult> Put(Genre genre)
+        {
+            _context.Attach(genre).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
     }
 }
