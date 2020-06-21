@@ -8,6 +8,68 @@
         </a>
     </div>
 
+<Pagination CurrentPage="@paginationDTO.Page" TotalAmountPages="totalAmountPages"
+            SelectedPage="SelectedPage" />
+
+    <GenericList List="_people">
+        <WholeListTemplate>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _people)
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-success" href="/person/edit/@item.Id">Edit</a>
+                                <button class="btn btn-danger" @onclick="@(() => DeletePerson(item.Id))">Delete</button>
+                            </td>
+                            <td>@item.Name</td>
+                        </tr>                
+                     }
+                </tbody>
+            </table>
+        </WholeListTemplate>
+    </GenericList>
+
 @code {
-   
+    List<Person> _people;
+    PaginationDTO paginationDTO = new PaginationDTO();
+    private int totalAmountPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadPeople();
+        }
+        catch (Exception _ex)
+        {
+            Console.WriteLine(_ex.Message);
+        }
+    }
+
+    private async Task LoadPeople()
+    {
+        var paginatedResponse = await personRepository.GetPeople(paginationDTO);
+        _people = paginatedResponse.Response;
+        totalAmountPages = paginatedResponse.TotalAmountPages;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        paginationDTO.Page = page;
+        await LoadPeople();
+    }
+
+    private async Task DeletePerson(int id)
+    {
+        await personRepository.DeletePerson(id);
+        var paginatedResponse = await personRepository.GetPeople(paginationDTO);
+        _people = paginatedResponse.Response;
+    }
 }

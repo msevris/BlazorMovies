@@ -44,7 +44,7 @@ namespace BlazorMovies.Server.Controllers
             return genre.Id;
         }
 
-        // PUT api/<>GenresController
+        // PUT api/<GenresController>
         [HttpPut]
         public async Task<ActionResult> Put(Genre genre)
         {
@@ -53,5 +53,15 @@ namespace BlazorMovies.Server.Controllers
             return NoContent();
         }
 
+        //DELETE api/<GenresController>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.Id == id);
+            if (genre == null) { return NotFound(); }
+            _context.Remove(genre);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

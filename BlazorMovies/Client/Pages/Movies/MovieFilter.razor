@@ -1,87 +1,94 @@
 ﻿@page "/movies/search"
-@inject IRepository repository
+@inject IMoviesRepository moviesRepository
+@inject IGenreRepository genreRepository
 
 <h3>Search Movies</h3>
 
-<div class="form-inline">
-    <div class="form-group mb-2">
-        <label for="title" class="sr-only">Title</label>
-        <input type="text" class="form-control" id="title" placeholder="Movie Title"
-               @bind-value="title" @bind-value:event="oninput"
-               @onkeypress="@((KeyboardEventArgs e) => TitleKeyPress(e))" />
-    </div>
-    <div class="form-group mx-sm-3 mb-2">
-        <select class="form-control" @bind="selectedGenre">
-            <option value="0">--Select a Genre</option>
-            @foreach (var genre in Genres)
-            {
-                <option value="@genre.Id">@genre.Name</option>
-            }
-        </select>
-    </div>
-    <div class="form-group mx-sm-3 mb-2">
-        <input type="checkbox" class="form-check-input" id="upcomingReleases" @bind="upcomingReleases" />
-        <label class="form-check-label" for="upcomingReleases">
-            Upcoming Releases
-        </label>
-    </div>
-    <div class="form-group mx-sm-3 mb-2">
-        <input type="checkbox" class="form-check-input" id="inTheaters" @bind="inTheaters" />
-        <label class="form-check-label" for="inTheaters">
-            In Theaters
-        </label>
-    </div>
+<EditForm Model="_filterMoviesDTO">
+    <div class="form-inline">
+        <div class="form-group mb-2">
+            <label for="title" class="sr-only">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Movie Title"
+                   @bind-value="_filterMoviesDTO.Title" @bind-value:event="oninput"
+                   @onkeypress="@((KeyboardEventArgs e) => TitleKeyPress(e))" />
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select class="form-control" @bind="_filterMoviesDTO.GenreId">
+                <option value="0">--Select a Genre</option>
+                @foreach (var genre in Genres)
+                {
+                    <option value="@genre.Id">@genre.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="upcomingReleases" @bind="_filterMoviesDTO.UpcomingReleases" />
+            <label class="form-check-label" for="upcomingReleases">
+                Upcoming Releases
+            </label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="checkbox" class="form-check-input" id="inTheaters" @bind="_filterMoviesDTO.InTheaters" />
+            <label class="form-check-label" for="inTheaters">
+                In Theaters
+            </label>
+        </div>
 
 
-    <button type="button" class="btn btn-primary mb-2 mx-sm-3" @onclick="SearchForMovies">Filter</button>
-    <button type="button" class="btn btn-outline-danger mb-2" @onclick="Clear">Clear</button>
-</div>
+        <button type="button" class="btn btn-primary mb-2 mx-sm-3" @onclick="SearchForMovies">Filter</button>
+        <button type="button" class="btn btn-outline-danger mb-2" @onclick="Clear">Clear</button>
+    </div>
+</EditForm>
 
-<MoviesList Movies="Movies"/>
+<MoviesList Movies="Movies" />
+<Pagination CurrentPage="_filterMoviesDTO.Page" TotalAmountPages="totalAmountPages" SelectedPage="SelectedPage"/>
 
 @code {
-    string title = "";
-    string selectedGenre = "0";
 
-    bool upcomingReleases = false;
-    bool inTheaters = false;
-
+    private FilterMoviesDTO _filterMoviesDTO = new FilterMoviesDTO();
+    private List<Genre> Genres = new List<Genre>();
     private List<Movie> Movies;
-    private List<Genre> Genres = new List<Genre>()
-        {
-            new Genre() {Id = 1, Name="Action"},
-            new Genre() {Id = 2, Name="Comedy"},
-        };
+    private int totalAmountPages;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Movies = repository.GetMovies();
+        Genres = await genreRepository.GetGenres();
+        await LoadMovies();
     }
 
-    private void SearchForMovies()
+    private async Task SelectedPage(int page)
     {
-        Movies = Movies.Where(x => x.Title.Contains(title)).ToList();
-
-        Console.WriteLine($"title: {title}");
-        Console.WriteLine($"selectedGenre: {selectedGenre}");
-        Console.WriteLine($"upcomingReleases: {upcomingReleases}");
-        Console.WriteLine($"inTheaters: {inTheaters}");
+        _filterMoviesDTO.Page = page;
+        await LoadMovies();
     }
 
-    private void Clear()
+    private async Task LoadMovies()
     {
-        Movies = repository.GetMovies();
-        title = "";
-        selectedGenre = "0";
-        upcomingReleases = false;
-        inTheaters = false;
+        var paginatedResponse = await moviesRepository.GetMoviesFiltered(_filterMoviesDTO);
+        Movies = paginatedResponse.Response;
+        totalAmountPages = paginatedResponse.TotalAmountPages;
+
     }
 
-    private void TitleKeyPress(KeyboardEventArgs e)
+    private async Task SearchForMovies()
+    {
+        await LoadMovies();
+    }
+
+    private async Task Clear()
+    {
+        _filterMoviesDTO.Title = "";
+        _filterMoviesDTO.GenreId = 0;
+        _filterMoviesDTO.UpcomingReleases = false;
+        _filterMoviesDTO.InTheaters = false;
+        await LoadMovies();
+    }
+
+    private async Task TitleKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
-            SearchForMovies();
+            await SearchForMovies();
         }
     }
 }

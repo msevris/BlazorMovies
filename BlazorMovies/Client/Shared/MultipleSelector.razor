@@ -21,12 +21,8 @@
 
 
 @code {
-    [Parameter]
-    public List<MultipleSelectorModel> NoSelected { get; set; }
-    = new List<MultipleSelectorModel>();
-    [Parameter]
-    public List<MultipleSelectorModel> Selected { get; set; }
-    = new List<MultipleSelectorModel>();
+    [Parameter] public List<MultipleSelectorModel> NoSelected { get; set; } = new List<MultipleSelectorModel>();
+    [Parameter] public List<MultipleSelectorModel> Selected { get; set; } = new List<MultipleSelectorModel>();
 
     private string removeAllText = "<<";
 

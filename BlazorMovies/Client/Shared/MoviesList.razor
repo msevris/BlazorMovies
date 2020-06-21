@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime js
+@inject IMoviesRepository moviesRepository
 
 <div class="movies-container">
     <GenericList List="Movies">
@@ -15,13 +16,13 @@
 
     private async Task DeleteMovie(Movie movie)
     {
-        await js.MyFunction("custom_message");
+        await js.MyFunction("custom message");
 
         var confirmed = await js.Confirm($"Are you sure you want to delete {movie.Title}?");
         if (confirmed)
         {
+            await moviesRepository.DeleteMovie(movie.Id);
             Movies.Remove(movie);
         }
     }
-
 }

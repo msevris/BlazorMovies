@@ -1,6 +1,8 @@
 ﻿@page "/person/edit/{PersonId:int}"
-
+@inject IPersonRepository personRepository 
+@inject NavigationManager navigationManager
 <h3>Edit Person</h3>
+
 @if (Person != null)
 {
     <PersonForm Person="Person" OnValidSubmit="Edit" />
@@ -11,15 +13,14 @@
 
     Person Person;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Person = new Person() { Name = "Arnold Schwarzenegger", DateOfBirth = new DateTime(1947, 7, 13), Biography = "With an almost unpronounceable surname and a thick Austrian accent, who would have ever believed that a brash, quick talking bodybuilder from a small European village would become one of Hollywood's biggest stars, marry into the prestigious Kennedy family, amass a fortune via shrewd investments and one day be the Governor of California!?" };
-
-        Person = new Person() { Name = "Edward Norton", DateOfBirth = new DateTime(1969, 8, 18), Biography = "American actor, filmmaker and activist Edward Harrison Norton was born on August 18, 1969, in Boston, Massachusetts, and was raised in Columbia, Maryland. His mother, Lydia Robinson Robin (Rouse), was a foundation executive and teacher of English, and a daughter of famed real estate developer James Rouse, who developed Columbia, MD;" };
+        Person = await personRepository.GetPersonById(PersonId);
     }
 
-    private void Edit()
+    private async Task Edit()
     {
-        Console.WriteLine("editing the person ...");
+        await personRepository.UpdatePerson(Person);
+        navigationManager.NavigateTo("people");
     }
 }
