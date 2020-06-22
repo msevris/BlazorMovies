@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BlazorMovies.Client.Auth
 {
-    public class JwtAuthenticationStateProvider : AuthenticationStateProvider,ILoginService
+    public class JwtAuthenticationStateProvider : AuthenticationStateProvider, ILoginService
     {
         private readonly IJSRuntime _js;
         private readonly HttpClient _httpClient;
