@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using BlazorMovies.Client.Helpers;
 using Blazor.FileReader;
 using BlazorMovies.Client.Repository;
+using Microsoft.AspNetCore.Components.Authorization;
+using BlazorMovies.Client.Auth;
 
 namespace BlazorMovies.Client
 {
@@ -33,6 +35,13 @@ namespace BlazorMovies.Client
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IMoviesRepository, MoviesRepository>();
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
+            services.AddAuthorizationCore();
+
+            services.AddScoped<JwtAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>(
+                provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
+            services.AddScoped<ILoginService, JwtAuthenticationStateProvider>(
+                provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
         }
     }
 }

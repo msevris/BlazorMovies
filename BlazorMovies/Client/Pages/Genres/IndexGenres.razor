@@ -1,10 +1,12 @@
 ﻿@page "/genres"
 @inject IGenreRepository genreRepository
+@attribute [Authorize]
 
 <h3>Index Genres</h3>
 
 <div class="form-group">
-    <a class="btn btn-info" href="genre/create">New Genre
+    <a class="btn btn-info" href="genre/create">
+        New Genre
     </a>
 </div>
 
@@ -19,15 +21,16 @@
             </thead>
             <tbody>
                 @foreach (var item in _genres)
-                 {
+                {
                     <tr>
                         <td>
                             <a class="btn btn-success" href="/genre/edit/@item.Id">Edit</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteGenres(item.Id))">Delete</button>
                         </td>
                         <td>@item.Name</td>
-                    </tr>                
-                 }
+                    </tr>
+
+                }
             </tbody>
         </table>
     </WholeListTemplate>
