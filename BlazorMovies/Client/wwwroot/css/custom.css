@@ -185,3 +185,6 @@ individual-movie-container > p{
         opacity: 0;
     }
 }
+.checked {
+    color:orange;
+}

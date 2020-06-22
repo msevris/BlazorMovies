@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
 using BlazorMovies.Server.Helpers;
@@ -9,6 +10,7 @@ using BlazorMovies.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,13 +24,16 @@ namespace BlazorMovies.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IFileStorageService _fileStorageService;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
         private string containerName = "movies";
 
-        public MoviesController(ApplicationDbContext context, IFileStorageService fileStorageService,IMapper mapper)
+        public MoviesController(ApplicationDbContext context, IFileStorageService fileStorageService,IMapper mapper,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _fileStorageService = fileStorageService;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -65,6 +70,25 @@ namespace BlazorMovies.Server.Controllers
 
             if (movie == null) { return NotFound(); }
 
+            var voteAverage = 0.0;
+            var userVote = 0;
+            if (await _context.MovieRatings.AnyAsync(x => x.MovieId == id))
+            {
+                voteAverage = await _context.MovieRatings.Where(x => x.MovieId == id)
+                    .AverageAsync(x => x.Rate);
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    var user = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+                    var userId = user.Id;
+                    
+                    var userVoteDB = await _context.MovieRatings.FirstOrDefaultAsync(x => x.MovieId == id && x.UserId == userId);
+                    if (userVoteDB != null)
+                    {
+                        userVote = userVoteDB.Rate;
+                    }
+                }
+            }
+
             movie.MoviesActors = movie.MoviesActors.OrderBy(x => x.Order).ToList();
 
             var model = new DetailsMovieDTO();
@@ -79,7 +103,9 @@ namespace BlazorMovies.Server.Controllers
                     Id = x.PersonId
 
                 }).ToList();
-            
+
+            model.UserVote = userVote;
+            model.AverageVote = voteAverage;
             return model;
         }
 
