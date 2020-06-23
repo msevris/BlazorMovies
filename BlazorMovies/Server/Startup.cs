@@ -53,7 +53,6 @@ namespace BlazorMovies.Server
             services.AddHttpContextAccessor();
             services.AddScoped<IFileStorageService, InAppStorageService>();
 
-
             services.AddMvc()
                 // in order to NOT get an exception of loop between linked Referenses , (ex. from Movies to Movies Genres and back )
                 .AddNewtonsoftJson(options =>
@@ -64,7 +63,6 @@ namespace BlazorMovies.Server
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
-
         }
 
 
