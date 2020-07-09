@@ -13,6 +13,7 @@ using BlazorMovies.Client.Repository;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorMovies.Client.Auth;
 
+
 namespace BlazorMovies.Client
 {
     public class Program
@@ -23,7 +24,6 @@ namespace BlazorMovies.Client
             builder.RootComponents.Add<App>("app");
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             ConfigureServices(builder.Services);
-
             await builder.Build().RunAsync();
         }
 

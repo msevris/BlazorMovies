@@ -1,18 +1,34 @@
 ﻿@inherits LayoutComponentBase
+@attribute [Authorize(Roles = "Admin")]
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    </Authorized>
+</AuthorizeView>
+
 
 <div class="main">
-    <div class="top-row px-4">
-        <LoginLinks />
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+    <div class="top-row navbar navbar-expand-lg navbar-light bg-light px-4 auth">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link nounderline" href="">Home</a>
+                </li>
+            </ul>
+            <LoginLinks />
+        </div>
     </div>
 
-    <div class="content px-4" style="margin-bottom: 20px;">
+    <div class="content px-4">
         @Body
     </div>
+
 </div>
-
-

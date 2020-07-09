@@ -1,8 +1,6 @@
 ﻿@using System.IO
 @inject IFileReaderService fileReaderService
 
-
-
 <div>
     <label>@Label</label>
     <div>
@@ -32,6 +30,7 @@
 
 
 @code {
+
     [Parameter] public string Label { get; set; } = "Image";
     [Parameter] public string ImageURL { get; set; }
     [Parameter] public EventCallback<string> OnSelectedImage { get; set; }
@@ -53,6 +52,4 @@
             }
         }
     }
-
-
 }

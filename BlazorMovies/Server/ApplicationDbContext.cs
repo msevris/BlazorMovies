@@ -15,6 +15,8 @@ namespace BlazorMovies.Server
         {
             modelBuilder.Entity<MoviesActors>().HasKey(x => new { x.MovieId, x.PersonId });
             modelBuilder.Entity<MoviesGenres>().HasKey(x => new { x.MovieId, x.GenreId });
+           
+            #region Add Admin User 
             // *** IT IS CORRECT 
             // but we use Sql Query instead 
 
@@ -40,8 +42,8 @@ namespace BlazorMovies.Server
             //    ClaimValue = "Admin",
             //    UserId = userAdminId
             //});
-
-
+            #endregion
+            
             base.OnModelCreating(modelBuilder);
         }
 

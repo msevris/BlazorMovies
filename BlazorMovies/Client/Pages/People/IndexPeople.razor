@@ -2,77 +2,79 @@
 @inject IPersonRepository personRepository
 @attribute [Authorize]
 
-    <h3>Index People</h3>
+<h3>Index People</h3>
 
-    <div class="form-group">
-        <a class="btn btn-info" href="person/create">
-            New Person
-        </a>
-    </div>
+<div class="form-group">
+    <a class="btn btn-info" href="person/create">
+        New Person
+    </a>
+</div>
 
-    <Pagination CurrentPage="@paginationDTO.Page" TotalAmountPages="totalAmountPages"
-                SelectedPage="SelectedPage" />
-
-    <GenericList List="_people">
-        <WholeListTemplate>
-            <table class="table table-striped">
-                <thead>
+<GenericList List="_people">
+    <WholeListTemplate>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Picture</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in _people)
+                {
                     <tr>
-                        <th></th>
-                        <th>Name</th>
+                        <td>
+                            <a class="btn btn-success btn-sm" href="/person/edit/@item.Id">Edit</a>
+                            <button class="btn btn-danger btn-sm" @onclick="@(() => DeletePerson(item.Id))">Delete</button>
+                        </td>
+                        <td>@item.Picture</td>
+                        <td>@item.Name</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in _people)
-                    {
-                        <tr>
-                            <td>
-                                <a class="btn btn-success" href="/person/edit/@item.Id">Edit</a>
-                                <button class="btn btn-danger" @onclick="@(() => DeletePerson(item.Id))">Delete</button>
-                            </td>
-                            <td>@item.Name</td>
-                        </tr>
 
-                    }
-                </tbody>
-            </table>
-        </WholeListTemplate>
-    </GenericList>
+                }
+            </tbody>
+        </table>
+    </WholeListTemplate>
+</GenericList>
 
-    @code {
-        List<Person> _people;
-        PaginationDTO paginationDTO = new PaginationDTO();
-        private int totalAmountPages;
+<Pagination CurrentPage="@paginationDTO.Page" TotalAmountPages="totalAmountPages"
+            SelectedPage="SelectedPage" />
 
-        protected override async Task OnInitializedAsync()
+@code {
+    List<Person> _people;
+    PaginationDTO paginationDTO = new PaginationDTO();
+    private int totalAmountPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
         {
-            try
-            {
-                await LoadPeople();
-            }
-            catch (Exception _ex)
-            {
-                Console.WriteLine(_ex.Message);
-            }
-        }
-
-        private async Task LoadPeople()
-        {
-            var paginatedResponse = await personRepository.GetPeople(paginationDTO);
-            _people = paginatedResponse.Response;
-            totalAmountPages = paginatedResponse.TotalAmountPages;
-        }
-
-        private async Task SelectedPage(int page)
-        {
-            paginationDTO.Page = page;
             await LoadPeople();
         }
-
-        private async Task DeletePerson(int id)
+        catch (Exception _ex)
         {
-            await personRepository.DeletePerson(id);
-            var paginatedResponse = await personRepository.GetPeople(paginationDTO);
-            _people = paginatedResponse.Response;
+            Console.WriteLine(_ex.Message);
         }
     }
+
+    private async Task LoadPeople()
+    {
+        var paginatedResponse = await personRepository.GetPeople(paginationDTO);
+        _people = paginatedResponse.Response;
+        totalAmountPages = paginatedResponse.TotalAmountPages;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        paginationDTO.Page = page;
+        await LoadPeople();
+    }
+
+    private async Task DeletePerson(int id)
+    {
+        await personRepository.DeletePerson(id);
+        var paginatedResponse = await personRepository.GetPeople(paginationDTO);
+        _people = paginatedResponse.Response;
+    }
+}

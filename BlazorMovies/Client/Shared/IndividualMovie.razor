@@ -6,7 +6,7 @@
     <p><a href="@movieURL">@Movie.TitleBrief</a></p>
     <div>
         
-        <AuthorizeView>
+        <AuthorizeView Roles="Admin">
             <Authorized>
                 <a class="btn btn-info" href="/movies/edit/@Movie.Id">Edit</a>
                 <button type="button" class="btn btn-danger"

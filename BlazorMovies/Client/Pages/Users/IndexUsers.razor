@@ -1,7 +1,6 @@
 ﻿@page "/users"
 @inject IUsersRepository _usersRepository
 
-<Pagination CurrentPage="@paginationDTO.Page" SelectedPage="SelectedPage" TotalAmountPages="totalAmountOfPages" />
 
 <h4>Index Users</h4>
 <GenericList List="Users">
@@ -29,7 +28,9 @@
         </table>
     </WholeListTemplate>
 </GenericList>
-             
+
+<Pagination CurrentPage="@paginationDTO.Page" SelectedPage="SelectedPage" TotalAmountPages="totalAmountOfPages" />
+
 
 @code {
     List<UserDTO> Users;

@@ -8,6 +8,11 @@ namespace BlazorMovies.Server.Migrations
         {
             migrationBuilder.Sql(
             @"
+
+                INSERT INTO AspNetRoles (Id,[Name], NormalizedName)
+                        values('57f0e373-2d6f-4fff-90a2-c151d00c2410', 'Admin', 'Admin');
+                GO
+
                 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'AccessFailedCount', N'ConcurrencyStamp', N'Email', N'EmailConfirmed', N'LockoutEnabled', N'LockoutEnd', N'NormalizedEmail', N'NormalizedUserName', N'PasswordHash', N'PhoneNumber', N'PhoneNumberConfirmed', N'SecurityStamp', N'TwoFactorEnabled', N'UserName') AND [object_id] = OBJECT_ID(N'[AspNetUsers]'))
                     SET IDENTITY_INSERT [AspNetUsers] ON;
                 INSERT INTO [AspNetUsers] ([Id], [AccessFailedCount], [ConcurrencyStamp], [Email], [EmailConfirmed], [LockoutEnabled], [LockoutEnd], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [SecurityStamp], [TwoFactorEnabled], [UserName])
@@ -23,11 +28,6 @@ namespace BlazorMovies.Server.Migrations
                 VALUES (1, N'http://schemas.microsoft.com/ws/2008/06/identity/claims/role', N'Admin', N'04aea431-6c56-4892-bc63-5929b77569ea');
                 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'ClaimType', N'ClaimValue', N'UserId') AND [object_id] = OBJECT_ID(N'[AspNetUserClaims]'))
                     SET IDENTITY_INSERT [AspNetUserClaims] OFF;
-                
-                GO
-                
-                INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-                VALUES (N'20200623092116_AdminUser', N'3.1.5');
                 
                 GO
                 

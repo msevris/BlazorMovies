@@ -1,7 +1,10 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@import url('../font-awesome/css/all.min.css');
+@import url('../open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    background-repeat: no-repeat;
 }
 
 a, .btn-link {
@@ -20,11 +23,79 @@ app {
     flex-direction: column;
 }
 
+/*#region Navigation Bar | Top Row |  */
+
 .top-row {
     height: 3.5rem;
     display: flex;
     align-items: center;
 }
+
+.navbar-login {
+    width: 305px;
+    padding:10px;
+    padding-bottom:0px;
+}
+.navbar-login-session {
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+.dropdown-menu {
+
+}
+.icon-size {
+    font-size: 87px;
+}
+
+/*#endregion */
+
+/*#region Login Page | Login logo | Login card Area (.login-card-body, .register-card-body) */
+
+.nounderline {
+    text-decoration: none !important;
+    color: #495057;
+}
+.login-page,
+.register-page {
+    -ms-flex-align: center;
+    align-items: center;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 70vh;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.login-logo,.register-logo {
+    font-size: 2.1rem;
+    font-weight: 300;
+    margin-bottom: .9rem;
+    text-align: center;
+}
+
+.login-box,.register-box{
+    width:360px;
+    height:auto;
+}
+
+.login-box-msg,
+.register-box-msg {
+    margin: 0;
+    padding: 0 20px 20px;
+    text-align: center;
+}
+.login-card-body,.register-card-body {
+    background: rgb(247, 247, 247);
+    border-top: 0;
+    color: #666;
+    padding: 20px;
+}
+
+
+/*#endregion */
 
 .main {
     flex: 1;
@@ -41,10 +112,10 @@ app {
             margin-left: 1.5rem;
         }
 
-.main .top-row a:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .main .top-row a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -129,12 +200,12 @@ app {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
@@ -181,3 +252,7 @@ app {
         display: block;
     }
 }
+
+
+
+
